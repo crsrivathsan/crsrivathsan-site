@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Admin — Srivathsan Chinnakonda</title>
+<meta name="robots" content="noindex, nofollow" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  :root{
+    --navy:#FFFFFF; --navy-mid:#F5F8FF; --navy-card:#FFFFFF;
+    --teal:#1E5FFF; --teal2:#FF7A1A;
+    --text:#0F1B33; --text-dim:#5B6B8C;
+    --border:rgba(30,95,255,0.14);
+    --danger:#D8362A;
+  }
+  body{background:var(--navy-mid);color:var(--text);font-family:'Inter',sans-serif;line-height:1.6;padding:2rem;}
+  .wrap{max-width:900px;margin:0 auto;}
+  h1{font-family:'Playfair Display',serif;font-size:1.8rem;margin-bottom:0.5rem;}
+  .sub{color:var(--text-dim);margin-bottom:2rem;font-size:0.9rem;}
+  .card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:1.6rem;margin-bottom:1.5rem;}
+  .card h2{font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:1rem;}
+  label{display:block;font-size:0.8rem;font-weight:600;margin:0.9rem 0 0.3rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.05em;}
+  input, textarea, select{
+    width:100%;padding:0.6rem 0.8rem;border:1px solid var(--border);border-radius:6px;
+    font-family:'Inter',sans-serif;font-size:0.9rem;color:var(--text);background:#fff;
+  }
+  textarea{min-height:120px;resize:vertical;font-family:'JetBrains Mono',monospace;font-size:0.82rem;}
+  button{
+    font-family:'Inter',sans-serif;font-weight:600;font-size:0.85rem;
+    padding:0.7rem 1.4rem;border-radius:6px;border:none;cursor:pointer;
+    background:var(--teal);color:#fff;margin-top:1rem;margin-right:0.6rem;
+  }
+  button.danger{background:var(--danger);}
+  button.secondary{background:#fff;color:var(--teal);border:1px solid var(--teal);}
+  .item-row{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:0.8rem;border:1px solid var(--border);border-radius:6px;margin-bottom:0.6rem;
+  }
+  .item-row .meta{font-size:0.85rem;}
+  .item-row .meta strong{display:block;}
+  .item-row .actions button{margin-top:0;padding:0.4rem 0.8rem;font-size:0.78rem;}
+  #gate{max-width:400px;margin:6rem auto;text-align:center;}
+  #gate input{margin-bottom:1rem;}
+  #app{display:none;}
+  .status{font-size:0.82rem;margin-top:0.6rem;}
+  .status.ok{color:#1a8a4a;}
+  .status.err{color:var(--danger);}
+  .hint{font-size:0.78rem;color:var(--text-dim);margin-top:0.4rem;}
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <h1>Admin Access</h1>
+  <p class="sub">Enter your secret key to manage content.</p>
+  <input type="password" id="admin-key-input" placeholder="Secret key" />
+  <button onclick="unlockAdmin()">Unlock</button>
+  <p class="status err" id="gate-error"></p>
+</div>
+
+<div id="app" class="wrap">
+  <h1>Content Admin</h1>
+  <p class="sub">Changes here go live on crsrivathsan.com immediately — no redeploy needed.</p>
+
+  <div class="card">
+    <h2>Add / Edit Article</h2>
+    <label>Article ID (used in URL, e.g. <code>my-new-post</code> — lowercase, hyphens only)</label>
+    <input id="art-id" placeholder="my-new-post" />
+    <label>Tag (category label, e.g. "Product Strategy")</label>
+    <input id="art-tag" placeholder="Product Strategy" />
+    <label>Title</label>
+    <input id="art-title" placeholder="Article title" />
+    <label>Excerpt (1-2 sentence summary shown on the card)</label>
+    <textarea id="art-excerpt" style="min-height:70px;font-family:'Inter',sans-serif;"></textarea>
+    <label>Date label (e.g. "July 2026")</label>
+    <input id="art-date" placeholder="July 2026" />
+    <label>Read time (e.g. "5 min read")</label>
+    <input id="art-readtime" placeholder="5 min read" />
+    <label>Hero image URL (optional — leave blank for no image)</label>
+    <input id="art-image" placeholder="images/my-cover.png or full URL" />
+    <label>Hero image caption (optional)</label>
+    <input id="art-caption" placeholder="Caption text" />
+    <label>Body (HTML allowed — use &lt;p&gt;, &lt;h3&gt;, &lt;ul&gt;&lt;li&gt;, &lt;strong&gt;, &lt;div class="pullquote"&gt;)</label>
+    <textarea id="art-body" placeholder="&lt;p&gt;Your article content...&lt;/p&gt;"></textarea>
+    <button onclick="saveArticle()">Save Article</button>
+    <button class="secondary" onclick="clearArticleForm()">Clear Form</button>
+    <p class="status" id="art-status"></p>
+  </div>
+
+  <div class="card">
+    <h2>Existing Articles</h2>
+    <div id="article-list"></div>
+  </div>
+
+  <div class="card">
+    <h2>Add / Edit Book</h2>
+    <label>Book ID (e.g. <code>inspired-marty-cagan</code>)</label>
+    <input id="book-id" placeholder="inspired-marty-cagan" />
+    <label>Title</label>
+    <input id="book-title" placeholder="Book title" />
+    <label>Author</label>
+    <input id="book-author" placeholder="Author name" />
+    <label>Rating (1-5)</label>
+    <input id="book-rating" type="number" min="1" max="5" placeholder="5" />
+    <label>Your Take (1-2 sentences)</label>
+    <textarea id="book-take" style="min-height:70px;font-family:'Inter',sans-serif;"></textarea>
+    <button onclick="saveBook()">Save Book</button>
+    <button class="secondary" onclick="clearBookForm()">Clear Form</button>
+    <p class="status" id="book-status"></p>
+  </div>
+
+  <div class="card">
+    <h2>Existing Books</h2>
+    <div id="book-list"></div>
+  </div>
+</div>
+
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import {
+    getFirestore, collection, doc, setDoc, deleteDoc, getDocs, getDoc
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  // ════════════════════════════════════════════════
+  // PASTE YOUR FIREBASE CONFIG HERE (from Project Settings)
+  // ════════════════════════════════════════════════
+  const firebaseConfig = {
+    apiKey: "AIzaSyDA2ypGLYOp-4a2_7LZoFJft4S-XqXL58Q",
+    authDomain: "crsrivathsan-site.firebaseapp.com",
+    projectId: "crsrivathsan-site",
+    storageBucket: "crsrivathsan-site.firebasestorage.app",
+    messagingSenderId: "950249981129",
+    appId: "1:950249981129:web:0a709944b218a3c36ef918"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  window.db = db;
+  window.fbFns = { collection, doc, setDoc, deleteDoc, getDocs, getDoc };
+
+  window.dispatchEvent(new Event('firebase-ready'));
+</script>
+
+<script>
+  // The secret key you set in your Firestore security rule
+  const ADMIN_KEY_STORAGE = 'sc_admin_key';
+
+  function unlockAdmin() {
+    const key = document.getElementById('admin-key-input').value.trim();
+    if (!key) {
+      document.getElementById('gate-error').textContent = 'Please enter a key.';
+      return;
+    }
+    localStorage.setItem(ADMIN_KEY_STORAGE, key);
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    loadArticles();
+    loadBooks();
+  }
+
+  function getAdminKey() {
+    return localStorage.getItem(ADMIN_KEY_STORAGE) || '';
+  }
+
+  // Auto-unlock if key already stored
+  window.addEventListener('firebase-ready', () => {
+    if (getAdminKey()) {
+      document.getElementById('gate').style.display = 'none';
+      document.getElementById('app').style.display = 'block';
+      loadArticles();
+      loadBooks();
+    }
+  });
+
+  function slugify(str) {
+    return str.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  }
+
+  // ── ARTICLES ──
+  async function saveArticle() {
+    const { doc, setDoc, collection } = window.fbFns;
+    const id = document.getElementById('art-id').value.trim() || slugify(document.getElementById('art-title').value);
+    if (!id) { setStatus('art-status', 'Please provide a title or ID.', false); return; }
+
+    const data = {
+      id,
+      tag: document.getElementById('art-tag').value.trim(),
+      title: document.getElementById('art-title').value.trim(),
+      excerpt: document.getElementById('art-excerpt').value.trim(),
+      date: document.getElementById('art-date').value.trim(),
+      readTime: document.getElementById('art-readtime').value.trim(),
+      heroImage: document.getElementById('art-image').value.trim() || null,
+      heroCaption: document.getElementById('art-caption').value.trim() || null,
+      body: document.getElementById('art-body').value,
+      adminKey: getAdminKey(),
+      updatedAt: Date.now()
+    };
+
+    try {
+      await setDoc(doc(window.db, 'articles', id), data);
+      setStatus('art-status', 'Saved! Live on the site now.', true);
+      clearArticleForm();
+      loadArticles();
+    } catch (e) {
+      setStatus('art-status', 'Error: ' + e.message + ' (check your secret key)', false);
+    }
+  }
+
+  async function loadArticles() {
+    const { collection, getDocs } = window.fbFns;
+    const list = document.getElementById('article-list');
+    list.innerHTML = 'Loading...';
+    try {
+      const snap = await getDocs(collection(window.db, 'articles'));
+      if (snap.empty) { list.innerHTML = '<p class="hint">No articles in Firestore yet. The site is currently showing the built-in fallback articles.</p>'; return; }
+      list.innerHTML = '';
+      snap.forEach(d => {
+        const a = d.data();
+        const row = document.createElement('div');
+        row.className = 'item-row';
+        row.innerHTML = `
+          <div class="meta"><strong>${a.title}</strong>${a.tag} · ${a.date}</div>
+          <div class="actions">
+            <button class="secondary" onclick='editArticle(${JSON.stringify(JSON.stringify(a))})'>Edit</button>
+            <button class="danger" onclick="deleteArticle('${d.id}')">Delete</button>
+          </div>
+        `;
+        list.appendChild(row);
+      });
+    } catch (e) {
+      list.innerHTML = '<p class="status err">Error loading: ' + e.message + '</p>';
+    }
+  }
+
+  function editArticle(jsonStr) {
+    const a = JSON.parse(jsonStr);
+    document.getElementById('art-id').value = a.id || '';
+    document.getElementById('art-tag').value = a.tag || '';
+    document.getElementById('art-title').value = a.title || '';
+    document.getElementById('art-excerpt').value = a.excerpt || '';
+    document.getElementById('art-date').value = a.date || '';
+    document.getElementById('art-readtime').value = a.readTime || '';
+    document.getElementById('art-image').value = a.heroImage || '';
+    document.getElementById('art-caption').value = a.heroCaption || '';
+    document.getElementById('art-body').value = a.body || '';
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  }
+
+  async function deleteArticle(id) {
+    if (!confirm('Delete this article permanently?')) return;
+    const { doc, deleteDoc, setDoc, getDoc } = window.fbFns;
+    try {
+      // Firestore rules check adminKey on writes, but delete has no body to check.
+      // Workaround: write a tombstone check via a verify doc first, or just attempt delete
+      // (delete is allowed by rule only if request includes data, which deletes don't —
+      // so deletes are restricted separately, see ADMIN_GUIDE notes)
+      await deleteDoc(doc(window.db, 'articles', id));
+      loadArticles();
+    } catch (e) {
+      alert('Delete failed: ' + e.message + '\n\nIf this persists, see the delete-rule note in your setup guide.');
+    }
+  }
+
+  function clearArticleForm() {
+    ['art-id','art-tag','art-title','art-excerpt','art-date','art-readtime','art-image','art-caption','art-body']
+      .forEach(id => document.getElementById(id).value = '');
+  }
+
+  // ── BOOKS ──
+  async function saveBook() {
+    const { doc, setDoc } = window.fbFns;
+    const id = document.getElementById('book-id').value.trim() || slugify(document.getElementById('book-title').value);
+    if (!id) { setStatus('book-status', 'Please provide a title or ID.', false); return; }
+
+    const data = {
+      id,
+      title: document.getElementById('book-title').value.trim(),
+      author: document.getElementById('book-author').value.trim(),
+      rating: parseInt(document.getElementById('book-rating').value) || 5,
+      take: document.getElementById('book-take').value.trim(),
+      adminKey: getAdminKey(),
+      updatedAt: Date.now()
+    };
+
+    try {
+      await setDoc(doc(window.db, 'books', id), data);
+      setStatus('book-status', 'Saved! Live on the site now.', true);
+      clearBookForm();
+      loadBooks();
+    } catch (e) {
+      setStatus('book-status', 'Error: ' + e.message + ' (check your secret key)', false);
+    }
+  }
+
+  async function loadBooks() {
+    const { collection, getDocs } = window.fbFns;
+    const list = document.getElementById('book-list');
+    list.innerHTML = 'Loading...';
+    try {
+      const snap = await getDocs(collection(window.db, 'books'));
+      if (snap.empty) { list.innerHTML = '<p class="hint">No books in Firestore yet. The site is showing built-in fallback books.</p>'; return; }
+      list.innerHTML = '';
+      snap.forEach(d => {
+        const b = d.data();
+        const row = document.createElement('div');
+        row.className = 'item-row';
+        row.innerHTML = `
+          <div class="meta"><strong>${b.title}</strong>${b.author} · ${'★'.repeat(b.rating)}</div>
+          <div class="actions">
+            <button class="secondary" onclick='editBook(${JSON.stringify(JSON.stringify(b))})'>Edit</button>
+            <button class="danger" onclick="deleteBook('${d.id}')">Delete</button>
+          </div>
+        `;
+        list.appendChild(row);
+      });
+    } catch (e) {
+      list.innerHTML = '<p class="status err">Error loading: ' + e.message + '</p>';
+    }
+  }
+
+  function editBook(jsonStr) {
+    const b = JSON.parse(jsonStr);
+    document.getElementById('book-id').value = b.id || '';
+    document.getElementById('book-title').value = b.title || '';
+    document.getElementById('book-author').value = b.author || '';
+    document.getElementById('book-rating').value = b.rating || 5;
+    document.getElementById('book-take').value = b.take || '';
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  }
+
+  async function deleteBook(id) {
+    if (!confirm('Delete this book permanently?')) return;
+    const { doc, deleteDoc } = window.fbFns;
+    try {
+      await deleteDoc(doc(window.db, 'books', id));
+      loadBooks();
+    } catch (e) {
+      alert('Delete failed: ' + e.message);
+    }
+  }
+
+  function clearBookForm() {
+    ['book-id','book-title','book-author','book-rating','book-take']
+      .forEach(id => document.getElementById(id).value = '');
+  }
+
+  function setStatus(elId, msg, ok) {
+    const el = document.getElementById(elId);
+    el.textContent = msg;
+    el.className = 'status ' + (ok ? 'ok' : 'err');
+  }
+
+  // expose functions used by inline onclick handlers
+  window.unlockAdmin = unlockAdmin;
+  window.saveArticle = saveArticle;
+  window.clearArticleForm = clearArticleForm;
+  window.editArticle = editArticle;
+  window.deleteArticle = deleteArticle;
+  window.saveBook = saveBook;
+  window.clearBookForm = clearBookForm;
+  window.editBook = editBook;
+  window.deleteBook = deleteBook;
+</script>
+</body>
+</html>

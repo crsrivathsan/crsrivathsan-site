@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Articles — Srivathsan Chinnakonda</title>
+<meta name="description" content="Articles on product strategy, AI, and product management by Srivathsan Chinnakonda, Senior Product Manager at Verizon." />
+<link rel="canonical" href="https://crsrivathsan.com/articles.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://crsrivathsan.com/articles.html" />
+<meta property="og:title" content="Articles & Perspectives — Srivathsan Chinnakonda" />
+<meta property="og:description" content="Notes on product strategy, AI, and the occasional lesson from the street markets of Madurai." />
+<meta property="og:image" content="https://crsrivathsan.com/images/og-card.jpg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Articles & Perspectives — Srivathsan Chinnakonda" />
+<meta name="twitter:description" content="Notes on product strategy, AI, and the occasional lesson from the street markets of Madurai." />
+<meta name="twitter:image" content="https://crsrivathsan.com/images/og-card.jpg" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  :root{
+    --navy:#FFFFFF; --navy-mid:#F5F8FF; --navy-card:#FFFFFF;
+    --teal:#1E5FFF; --teal2:#FF7A1A;
+    --teal-dim:rgba(30,95,255,0.08); --teal-glow:rgba(30,95,255,0.22);
+    --text:#0F1B33; --text-dim:#5B6B8C; --warm:#946200; --warm-bright:#FFC23C; --orange-text:#C24E00;
+    --border:rgba(30,95,255,0.14); --border-bright:rgba(30,95,255,0.45);
+  }
+  html{scroll-behavior:smooth;}
+  body{background:var(--navy);color:var(--text);font-family:'Inter',sans-serif;line-height:1.6;overflow-x:hidden;}
+
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:500;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:1.1rem 3rem;background:rgba(255,255,255,0.85);backdrop-filter:blur(20px);
+    border-bottom:1px solid var(--border);
+  }
+  .nav-logo{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:900;
+    background:linear-gradient(135deg,var(--teal),var(--teal2));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .nav-links{display:flex;gap:2.2rem;list-style:none;align-items:center;}
+  .nav-links a{color:var(--text-dim);text-decoration:none;font-size:0.75rem;font-weight:600;
+    letter-spacing:0.12em;text-transform:uppercase;transition:color 0.2s;}
+  .nav-links a:hover{color:var(--teal);}
+  .nav-links a.active{color:var(--teal);}
+
+  .page-wrap{max-width:1100px;margin:0 auto;padding:9rem 2.5rem 6rem;}
+
+  .page-eyebrow{font-family:'JetBrains Mono',monospace;font-size:0.7rem;font-weight:600;
+    letter-spacing:0.2em;text-transform:uppercase;color:var(--teal);margin-bottom:0.8rem;text-align:center;}
+  .page-title{font-family:'Playfair Display',serif;font-size:clamp(2.2rem,4vw,3.2rem);font-weight:900;
+    text-align:center;margin-bottom:1rem;}
+  .page-sub{text-align:center;color:var(--text-dim);font-size:1rem;max-width:560px;margin:0 auto 4rem;line-height:1.8;}
+
+  /* ── ARTICLE GRID ── */
+  #grid-view{}
+  .article-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.8rem;}
+  .article-card{
+    background:var(--navy-card);border:1px solid var(--border);border-radius:10px;
+    overflow:hidden;cursor:pointer;transition:transform 0.3s,border-color 0.3s,box-shadow 0.3s;
+    display:flex;flex-direction:column;
+  }
+  .article-card:hover{transform:translateY(-6px);border-color:var(--teal);box-shadow:0 20px 50px rgba(30,95,255,0.15);}
+  .article-thumb{width:100%;height:190px;object-fit:cover;display:block;
+    filter:saturate(0.9) brightness(0.9);transition:filter 0.3s,transform 0.4s;}
+  .article-card:hover .article-thumb{filter:saturate(1.1) brightness(1);transform:scale(1.04);}
+  .article-thumb-fallback{
+    width:100%;height:190px;display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(135deg,var(--navy-mid),var(--navy-card));
+    font-family:'Playfair Display',serif;font-size:2.5rem;color:var(--teal);opacity:0.3;
+  }
+  .article-body{padding:1.6rem 1.7rem 1.8rem;flex:1;display:flex;flex-direction:column;}
+  .article-tag{
+    font-family:'JetBrains Mono',monospace;font-size:0.65rem;font-weight:600;color:var(--teal);
+    letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.7rem;
+  }
+  .article-title{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;
+    margin-bottom:0.7rem;line-height:1.35;}
+  .article-excerpt{font-size:0.85rem;color:var(--text-dim);line-height:1.7;flex:1;margin-bottom:1.2rem;}
+  .article-meta{display:flex;justify-content:space-between;align-items:center;
+    font-size:0.72rem;color:var(--text-dim);border-top:1px solid rgba(30,95,255,0.08);padding-top:1rem;}
+  .article-readmore{color:var(--teal);font-weight:600;display:flex;align-items:center;gap:0.3rem;
+    transition:gap 0.2s;}
+  .article-card:hover .article-readmore{gap:0.55rem;}
+
+  /* ── SINGLE ARTICLE VIEW ── */
+  #article-view{display:none;}
+  .back-link{
+    display:inline-flex;align-items:center;gap:0.5rem;color:var(--teal);text-decoration:none;
+    font-size:0.8rem;font-weight:600;letter-spacing:0.05em;margin-bottom:2.5rem;
+    transition:gap 0.2s;
+  }
+  .back-link:hover{gap:0.8rem;}
+  .article-hero-img{width:100%;max-height:420px;object-fit:cover;border-radius:12px;margin-bottom:2.5rem;
+    border:1px solid var(--border);}
+  .article-hero-caption{font-size:0.78rem;color:var(--text-dim);text-align:center;margin-top:-2rem;margin-bottom:2.5rem;font-style:italic;}
+  .article-full-tag{font-family:'JetBrains Mono',monospace;font-size:0.7rem;font-weight:600;color:var(--teal);
+    letter-spacing:0.15em;text-transform:uppercase;margin-bottom:1rem;}
+  .article-full-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,3.5vw,2.6rem);
+    font-weight:800;line-height:1.2;margin-bottom:1rem;}
+  .article-full-meta{font-size:0.82rem;color:var(--text-dim);margin-bottom:3rem;
+    padding-bottom:2rem;border-bottom:1px solid var(--border);}
+  .article-full-body{font-size:1.02rem;color:var(--text-dim);line-height:1.95;max-width:720px;}
+  .article-full-body p{margin-bottom:1.5rem;}
+  .article-full-body h3{font-family:'Playfair Display',serif;font-size:1.35rem;color:var(--text);
+    font-weight:700;margin:2.2rem 0 1rem;}
+  .article-full-body ul{margin:0 0 1.5rem 0;padding-left:0;list-style:none;}
+  .article-full-body ul li{position:relative;padding-left:1.6rem;margin-bottom:0.8rem;color:var(--text-dim);}
+  .article-full-body ul li::before{content:'▸';position:absolute;left:0;color:var(--teal);}
+  .article-full-body ol{margin:0 0 1.5rem 0;padding-left:1.4rem;}
+  .article-full-body ol li{margin-bottom:0.6rem;color:var(--text-dim);}
+  .article-full-body strong{color:var(--text);font-weight:600;}
+  .article-full-body .pullquote{
+    border-left:3px solid var(--teal);padding:0.5rem 0 0.5rem 1.5rem;margin:2rem 0;
+    font-family:'Playfair Display',serif;font-style:italic;font-size:1.2rem;color:var(--text);
+  }
+  .article-closing{
+    margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border);
+    font-size:0.85rem;color:var(--text-dim);font-style:italic;
+  }
+
+  footer{text-align:center;padding:2rem;font-family:'JetBrains Mono',monospace;font-size:0.68rem;
+    color:rgba(91,107,140,0.5);border-top:1px solid rgba(30,95,255,0.05);}
+
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity 0.6s,transform 0.6s;}
+  .reveal.visible{opacity:1;transform:translateY(0);}
+
+  @media(max-width:700px){
+    .page-wrap{padding:7.5rem 1.5rem 4rem;}
+    .nav-links{gap:1.2rem;}
+    nav{padding:1rem 1.5rem;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">SC</div>
+  <ul class="nav-links">
+    <li><a href="index.html">Resume</a></li>
+    <li><a href="articles.html" class="active">Articles</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="page-wrap">
+
+  <!-- GRID VIEW -->
+  <div id="grid-view">
+    <div class="page-eyebrow">Writing</div>
+    <h1 class="page-title">Articles & Perspectives</h1>
+    <p class="page-sub">Notes on product strategy, AI, and the occasional lesson from the street markets of Madurai.</p>
+    <div class="article-grid" id="article-grid"></div>
+  </div>
+
+  <!-- SINGLE ARTICLE VIEW -->
+  <div id="article-view">
+    <a href="#" class="back-link" id="back-btn">← Back to all articles</a>
+    <div id="article-content"></div>
+  </div>
+
+</div>
+
+<footer>// © 2026 Srivathsan Chinnakonda · Senior Product Manager</footer>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  // ════════════════════════════════════════════════
+  // PASTE YOUR FIREBASE CONFIG HERE (same as admin.html)
+  // ════════════════════════════════════════════════
+  const firebaseConfig = {
+    apiKey: "AIzaSyDA2ypGLYOp-4a2_7LZoFJft4S-XqXL58Q",
+    authDomain: "crsrivathsan-site.firebaseapp.com",
+    projectId: "crsrivathsan-site",
+    storageBucket: "crsrivathsan-site.firebasestorage.app",
+    messagingSenderId: "950249981129",
+    appId: "1:950249981129:web:0a709944b218a3c36ef918"
+  };
+
+  try {
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const snap = await getDocs(collection(db, 'articles'));
+    if (!snap.empty) {
+      const fromFirestore = [];
+      snap.forEach(d => fromFirestore.push(d.data()));
+      window.__firestoreArticles = fromFirestore;
+    }
+  } catch (e) {
+    console.warn('Firestore unavailable, using fallback articles:', e.message);
+  }
+  window.dispatchEvent(new Event('articles-data-ready'));
+</script>
+
+<script>
+// ════════════════════════════════════════
+// FALLBACK ARTICLE DATA — used if Firestore is empty or unreachable
+// ════════════════════════════════════════
+const fallbackArticles = [
+  {
+    id: "blue-ocean-strategy",
+    tag: "Product Strategy",
+    title: "Blue Ocean Strategy: Building a New Boat, Not Sailing Faster",
+    excerpt: "It might sound like complex management theory, but in practice the concept is simple — create new market space instead of competing in existing ones. A look at Gmail, AWS, and a 70-year-old sweet shop in Madurai.",
+    date: "June 2026",
+    readTime: "6 min read",
+    heroImage: "images/bagavathi-sweets.png",
+    heroCaption: "Bagavathi Sweets, Chinnakadai Street, Madurai — a 70-year-old family business that found its Blue Ocean during COVID-19.",
+    body: `
+      <p>Hello everyone,</p>
+      <p>I wanted to briefly discuss the Blue Ocean Strategy today. It might sound like complex management theory, but in practice, the concept is quite straightforward: it's about creating new market space rather than competing in existing ones.</p>
+
+      <h3>So, what exactly is the Blue Ocean Strategy?</h3>
+      <p>It's the act of making the competition irrelevant by simultaneously pursuing differentiation and low cost. A successful business needs a differentiating factor — whether in terms of cost, value delivered, time, or quality — that makes it stand out.</p>
+      <p>A business that fails to innovate and differentiate inevitably finds itself in the <strong>Red Ocean</strong>, a saturated market where competitors are fiercely fighting for market share, staining the waters with "blood" — intense competition and low profit margins.</p>
+
+      <h3>Finding the Blue Ocean</h3>
+      <p>Creating a competitive difference is easier said than done. The Blue Ocean is a market space with less competition that offers a unique value proposition to customers.</p>
+      <ul>
+        <li><strong>Gmail</strong>, upon launch, was a Blue Ocean. Its clean interface and massive storage capacity offered superior value compared to competitors like Hotmail or Yahoo.</li>
+        <li><strong>Amazon Web Services (AWS)</strong> was a Blue Ocean when Amazon first entered the cloud computing space, fundamentally changing how companies scale their IT infrastructure.</li>
+      </ul>
+      <p>To sustain and grow, major companies constantly reinvent themselves by deeply understanding customer needs, market trends, and the competitor landscape. They are in a constant search for the next Blue Ocean. However, those waters can't stay blue forever. When Great Whites or Tiger Sharks — the competition — enter, the ocean is bound to turn Red.</p>
+      <p>A crucial point: the unique selling proposition (USP) must provide tangible value to actual customers. Venturing into a new space requires thorough market analysis and research — you can't just envision a random value proposition.</p>
+
+      <h3>A Real-World Case Study from Madurai</h3>
+      <p>To illustrate, let me share a non-tech example that is a classic case study of Blue Ocean thinking.</p>
+      <p>In Madurai, Tamil Nadu, there is a 70-year-old, family-run sweet shop called <strong>Bagavathi Sweets</strong>. For decades, they faced little competition, and their focus remained on their core sweet business. However, since 2010, the local market became a Red Ocean — the number of competing sweet shops on the same street increased sharply, all fighting over price and quality. Bagavathi's sales inevitably declined as they struggled to create a new value differentiation.</p>
+      <p>They executed a brilliant Blue Ocean move during the COVID-19 pandemic. They stayed within the food industry but pivoted to selling South Indian meals, curries, sambars, and gravies separately. This move capitalized on two key factors:</p>
+      <ol>
+        <li><strong>Timing:</strong> People were craving outside food while maintaining social distancing.</li>
+        <li><strong>Unmet Local Need:</strong> They catered to the immediate local market, providing ready-made side dishes that complement home-cooked rice or chapatis.</li>
+      </ol>
+      <p>It was a low-risk, high-reward move. Their sales skyrocketed, and the prepared meals quickly became the primary revenue driver, making sweets a secondary business. While other competitors tried to copy the move, they failed to replicate Bagavathi's initial success and customer-focused value differentiation.</p>
+      <p>This market, too, will eventually attract more competition, forcing Bagavathi Sweets to reinvent itself again. But for now, it stands as a strong example of the Blue Ocean Strategy in action.</p>
+
+      <div class="pullquote">It's about building a new boat, not just sailing faster than the others.</div>
+
+      <h3>Key Takeaway for Product Managers</h3>
+      <p>As a Tech Product Manager, I encourage you to consistently:</p>
+      <ul>
+        <li>Look at customer needs, backed by data.</li>
+        <li>Analyze market trends using resources like Gartner and Bloomberg.</li>
+        <li>Study competitors by reviewing their quarterly and annual reports.</li>
+      </ul>
+      <p>See where the market is heading and strive to create a unique differential value proposition using the Blue Ocean approach.</p>
+
+      <div class="article-closing">
+        These are my initial thoughts on the Blue Ocean Strategy. I'd love to hear your experiences and insights on this topic. What's an example of a Blue Ocean move you've witnessed in the tech space recently?<br/><br/>
+        Life is all about continuous learning.....
+      </div>
+    `
+  },
+  {
+    id: "pm-musings-part-1",
+    tag: "Product Management Musings",
+    title: "Product Management Musings: Part 1 — Who's Leading the Product?",
+    excerpt: "Sales-led, technology-led, visionary-led, or product-led — the function that drives your product strategy shapes everything downstream. A look at the four models and why becoming product-led is a mindset shift, not a hiring decision.",
+    date: "June 2026",
+    readTime: "5 min read",
+    heroImage: "images/pm-musings-part-1.png",
+    heroCaption: "Four organizational models, one question: who's really leading the product?",
+    body: `
+      <p>I've been working in the product management space since 2016–17, and over time, I've realized that the more we share our knowledge, the more we expand and refine it. With that spirit, I decided to launch this series called <strong>Product Management Musings</strong>, where I'll share thoughts, experiences, and perspectives. There's no absolute right or wrong here — every approach has its merits and drawbacks.</p>
+
+      <p>Product management is often an overlooked discipline. Many organizations struggle to get it right, though we also have plenty of success stories that offer blueprints and proven practices. In this first article, I want to explore why laying the right foundations for product success is crucial — and why it starts with understanding who leads the product.</p>
+
+      <h3>Who's Leading the Product?</h3>
+      <p>Sometimes, the product is led by functions outside product management, and that shapes the company's direction in profound ways. Let's take a look at four common models that dictate product strategy.</p>
+
+      <h3>1. Sales-Led Organizations</h3>
+      <p>In sales-led companies, product strategy is often dictated by contractual obligations and immediate customer demands. For startups, this makes sense in the early stages — after all, you need to win and retain those first customers. But if this continues unchecked as the company scales, it can become a recipe for disaster.</p>
+      <p>Why? Because adding every feature requested by one customer can alienate others and lead to a cluttered, fragmented product. Sales teams naturally focus on short-term (quarterly or half-yearly) goals, which can pull the product in too many directions. Once a company grows beyond startup stage, the product strategy must shift toward broader market needs. Otherwise, you end up patching together a half-baked product that serves no one fully.</p>
+      <p><em>(Note: This doesn't apply to companies that intentionally build bespoke solutions.)</em></p>
+
+      <h3>2. Technology-Led Organizations</h3>
+      <p>In tech-led companies, the product strategy is often driven by "cool" technology and features. While innovation is vital, it must be balanced with market needs. There's little value in developing 20–30 AI-powered features if no one is asking for them.</p>
+      <div class="pullquote">Technology should enable product success — but it shouldn't dictate the product strategy.</div>
+
+      <h3>3. Visionary-Led Organizations</h3>
+      <p>Apple is a textbook example of a visionary-led company, where a few exceptional minds anticipate market needs and create groundbreaking products. But here's the catch: not every company has a Steve Jobs.</p>
+      <p>A key question is: what happens when the visionary leaves? Apple has successfully transitioned from a visionary-led organization to a more product-led one under Tim Cook.</p>
+      <p>Relying solely on visionaries isn't sustainable; it's often better to have 100 minds working together on one great product than 100 minds working in silos on 100 different things.</p>
+
+      <h3>4. Product-Led Organizations</h3>
+      <p>In a product-led company, business strategy is tightly aligned with product outcomes. The organization prioritizes the most valuable initiatives and iterates continuously to optimize business value — always keeping market needs front and center.</p>
+      <div class="pullquote">Product-led organizations are all about Outcome (Product & Value) driven, as opposed to the Output (Projects & Features) driven.</div>
+      <p>Becoming product-led requires rethinking roles, strategy, processes, and sometimes even the organizational structure. Technically, you don't need to hire new people or bring in coaches to make this shift — but it's still challenging because it demands a fundamental change in mindset. That is called a <strong>Product Management Mindset</strong>.</p>
+
+      <div class="article-closing">
+        I'll dive deeper into this mindset shift in upcoming posts.
+      </div>
+    `
+  },
+  {
+    id: "pm-misconceptions",
+    tag: "Product Management Musings",
+    title: "Common Misconceptions About the Product Manager Role",
+    excerpt: "Project Manager vs. Product Manager. PM vs. UX Designer. \"Micro CEO\" vs. reality. A breakdown of the most persistent myths about the role — and what a Product Manager actually does, with a nod to Marty Cagan's INSPIRED.",
+    date: "June 2026",
+    readTime: "6 min read",
+    heroImage: "images/pm-misconceptions.png",
+    heroCaption: "Cutting through the noise: what a Product Manager actually is, versus the common myths.",
+    body: `
+      <p>Hello everyone,</p>
+      <p>In my previous article, we explored different types of organizations that drive Product Management. Today, let's dive into some of the most common misconceptions about the Product Manager (PM) role — misunderstandings that can easily steer a product into trouble.</p>
+
+      <h3>1. Confusing the Project Manager with the Product Manager</h3>
+      <p>One of the most frequent misconceptions is assuming that a Project Manager and a Product Manager are interchangeable. While there can be some overlap, especially in smaller or growing organizations, these are fundamentally distinct roles and should remain separate in the long run.</p>
+      <ul>
+        <li><strong>Project Manager</strong> → Delivery-focused. <strong>Product Manager</strong> → Business-focused.</li>
+        <li><strong>Project Manager</strong> → Feature-focused. <strong>Product Manager</strong> → Value-focused.</li>
+        <li><strong>Project Manager</strong> → Operational KPIs. <strong>Product Manager</strong> → Business/Customer KPIs.</li>
+      </ul>
+      <p>Put simply, a Project Manager answers <strong>how and when</strong> — How are we going to deliver this feature? When will it be ready? A Product Manager answers <strong>why</strong> — Why are we building this product? Will it solve a real customer problem? Does it align with the company's strategy? Will it deliver measurable business value?</p>
+
+      <h3>2. Mistaking the Product Manager for a UX Designer</h3>
+      <p>Another common mix-up is between Product Managers and UX Designers. While both roles share a focus on customer empathy and understanding customer problems, their responsibilities diverge beyond that point.</p>
+      <p>A Product Manager's role spans understanding Customer, Business, and Market (CBM) needs, defining the customer journey, ensuring value-driven delivery, prioritizing features, tracking KPIs, course-correcting based on data, coordinating with adjacent systems, and shaping pricing strategy. In contrast, a UX Designer zeroes in on crafting intuitive, delightful user experiences.</p>
+
+      <h3>3. Calling the Product Manager a "Micro CEO"</h3>
+      <p>You've probably heard the phrase "A Product Manager is the CEO of the product." Honestly? That's an overstatement.</p>
+      <p>A CEO holds direct authority: they can hire, fire, allocate resources, and make top-down decisions. A Product Manager, on the other hand, typically works without direct authority — influencing teams and stakeholders through collaboration, persuasion, and data-backed arguments.</p>
+      <div class="pullquote">At heart, the Product Manager is the customer's advocate — part advocate, part judge, making evidence-based decisions using KPIs to guide the product's direction.</div>
+
+      <h3>So, Who Is a Product Manager?</h3>
+      <p>A Product Manager is someone who delivers value to customers while keeping the organization's business goals in mind. They ask tough, essential questions like:</p>
+      <ol>
+        <li>Why are we building this product?</li>
+        <li>How will customers use it?</li>
+        <li>Will this create value for them?</li>
+        <li>What does success look like?</li>
+        <li>How will we measure success?</li>
+        <li>What happens if customers don't use the product or feature?</li>
+        <li>Will this product or feature integrate smoothly with adjacent systems?</li>
+      </ol>
+      <p>Depending on the organization, they may also tackle how the product is marketed and what the pricing strategy should be. While this list isn't exhaustive, it covers the core of what most Product Managers do.</p>
+
+      <h3>A Recommended Read</h3>
+      <p>One of my favorite books on Product Management is <strong>INSPIRED by Marty Cagan</strong>. It beautifully outlines the risks every Product Manager should assess before starting product development:</p>
+      <ol>
+        <li><strong>Value Risk</strong> — Will customers find value in the product or feature?</li>
+        <li><strong>Usability Risk</strong> — Will customers know how to use it?</li>
+        <li><strong>Feasibility Risk</strong> — Can the team build it, and will it work within our current ecosystem?</li>
+        <li><strong>Viability Risk</strong> — Will it help the business sustain and grow?</li>
+      </ol>
+      <p>If you're serious about pursuing a career in Product Management, I highly recommend reading this book.</p>
+
+      <div class="article-closing">
+        In the next article, we'll explore why companies need Product Managers and where they should focus when starting product development.
+      </div>
+    `
+  }
+];
+
+// ════════════════════════════════════════
+// RENDER LOGIC
+// ════════════════════════════════════════
+let articles = fallbackArticles;
+const grid = document.getElementById('article-grid');
+const gridView = document.getElementById('grid-view');
+const articleView = document.getElementById('article-view');
+const articleContent = document.getElementById('article-content');
+const backBtn = document.getElementById('back-btn');
+
+function renderGrid() {
+  grid.innerHTML = articles.map((a, i) => `
+    <div class="article-card reveal" style="transition-delay:${i*0.08}s" onclick="openArticle('${a.id}')">
+      ${a.heroImage
+        ? `<img class="article-thumb" src="${a.heroImage}" alt="${a.title}" />`
+        : `<div class="article-thumb-fallback">SC</div>`}
+      <div class="article-body">
+        <div class="article-tag">${a.tag}</div>
+        <div class="article-title">${a.title}</div>
+        <div class="article-excerpt">${a.excerpt}</div>
+        <div class="article-meta">
+          <span>${a.date} · ${a.readTime}</span>
+          <span class="article-readmore">Read →</span>
+        </div>
+      </div>
+    </div>
+  `).join('');
+  observeReveals();
+}
+
+function openArticle(id) {
+  const a = articles.find(x => x.id === id);
+  if (!a) return;
+  articleContent.innerHTML = `
+    ${a.heroImage ? `<img class="article-hero-img" src="${a.heroImage}" alt="${a.title}" />` : ''}
+    ${a.heroCaption ? `<div class="article-hero-caption">${a.heroCaption}</div>` : ''}
+    <div class="article-full-tag">${a.tag}</div>
+    <h1 class="article-full-title">${a.title}</h1>
+    <div class="article-full-meta">${a.date} · ${a.readTime} · Srivathsan Chinnakonda</div>
+    <div class="article-full-body">${a.body}</div>
+  `;
+  gridView.style.display = 'none';
+  articleView.style.display = 'block';
+  window.scrollTo({top:0, behavior:'instant'});
+  history.pushState({article: id}, '', '#' + id);
+}
+
+function closeArticle() {
+  articleView.style.display = 'none';
+  gridView.style.display = 'block';
+  window.scrollTo({top:0, behavior:'instant'});
+  history.pushState({}, '', window.location.pathname);
+}
+
+backBtn.addEventListener('click', (e) => { e.preventDefault(); closeArticle(); });
+
+window.addEventListener('popstate', () => {
+  const hash = window.location.hash.replace('#','');
+  if (hash && articles.find(a => a.id === hash)) {
+    openArticle(hash);
+  } else {
+    closeArticle();
+  }
+});
+
+// Deep-link support on load — wait for Firestore check to finish first
+function initPage() {
+  if (window.__firestoreArticles && window.__firestoreArticles.length > 0) {
+    articles = window.__firestoreArticles;
+  }
+  renderGrid();
+  const hash = window.location.hash.replace('#','');
+  if (hash && articles.find(a => a.id === hash)) {
+    openArticle(hash);
+  }
+}
+
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+  window.addEventListener('articles-data-ready', initPage);
+} else {
+  document.addEventListener('DOMContentLoaded', () => {
+    window.addEventListener('articles-data-ready', initPage);
+  });
+}
+// Safety fallback: if the firestore module script fails entirely (e.g. ad blocker), render fallback after 2.5s regardless
+setTimeout(() => { if (!grid.innerHTML) initPage(); }, 2500);
+
+function observeReveals() {
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) { entry.target.classList.add('visible'); obs.unobserve(entry.target); }
+    });
+  }, {threshold:0.1});
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+}
+</script>
+</body>
+</html>
